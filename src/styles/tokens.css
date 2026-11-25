@@ -1,0 +1,132 @@
+/* Hallmark · shape: wayfinding board → directory → coast line → family → programs → since 2012 → app band → hotline plate · genre: modern-minimal · theme: custom · job: book · idea: "Вказівник медичного дому: з першого погляду видно, куди вам зараз" · vibe: "спокійна лікарняна навігація, великі номери, ясні стрілки"
+ * paper: #F5F8F6 · accent: #8DC63F · display: Geologica · body: Golos Text · hero: H1 і головна кнопка над темним вказівником із 4 рядків, перший — терміново з плашкою 9000 · nav: logo left, 5 anchors, urgent chip + hotline text + book button (named: R-005) · footer: light, coast line of 6 addresses + contacts + legal · imagery: client photos (team, pediatrics) · signature: плашка 9000 і чесні стрілки; лінія 6 адрес
+ * axes: light/geometric-sans/chromatic-green · posture: full-palette · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: imagery, only two client photos of good quality — the rest of the page is carried by typography and the wayfinding board */
+/* Hallmark · waive 44a · hero content 64px above, 52px below · concept §8: the first screen is hero plus the dark routes board, which fills the screen to ~880px */
+/* Hallmark · waive 44c · hero ends at 398px of 900 · concept §3: section routes (the wayfinding board) is part of the first screen and fills it */
+/* Hallmark · waive 59 · 52px gap hero→routes · the routes board is part of the first screen by concept, not a separate block */
+/* Hallmark · waive 77 · thin app band · concept §8: zastosunok is a compact one-line band, on purpose (R-011 replaces the banner) */
+/* Client design tokens: from design/concept.md (veon-concept: colors, fonts). */
+
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/geologica-cyrillic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/geologica-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url("/fonts/golos-text-cyrillic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url("/fonts/golos-text-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  /* Palette — one role per colour */
+  --paper: #F5F8F6;          /* фон */
+  --surface-2: #E6EEEA;      /* друга поверхня */
+  --ink: #0E2230;            /* текст 15.2:1 */
+  --ink-2: #4A5D69;          /* вторинний текст 6.4:1 */
+  --board: #073B52;          /* поле вказівника, темні стрічки */
+  --action: #8DC63F;         /* лише заливка головної кнопки і стрілки на темному */
+  --line: #0084B6;           /* лінії схеми і графіка */
+  --link: #006A93;           /* посилання в тексті 5.6:1 */
+  --urgent: #C4242F;         /* лише швидка */
+  --on-board: #F5F8F6;       /* текст на полі 11.2:1 */
+  --on-board-2: #B7CCD6;     /* вторинний на полі 7.2:1 */
+  --white: #FFFFFF;          /* текст на червоній плашці 5.8:1, поля вводу */
+  --action-hover: #7DB52F;
+  --urgent-hover: #A81E28;
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+  --hair-board: color-mix(in srgb, var(--on-board) 18%, transparent);
+
+  /* Base hooks used by global.css */
+  --color-bg: var(--paper);
+  --color-text: var(--ink);
+  --color-accent: var(--link);
+
+  /* Type */
+  --font-display: "Geologica", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, sans-serif;
+  --fs-h1: 36px;
+  --fs-plate: 44px;
+  --fs-h2: 32px;
+  --fs-row: 24px;
+  --fs-h3: 21px;
+  --fs-text: 17px;
+  --fs-small: 15px;
+
+  /* Space (8 px rhythm) */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 40px; --s-7: 64px; --s-8: 96px; --s-9: 128px; --s-10: 160px;
+  --gutter: 20px;
+  --gap: 16px;
+  --section-a: 72px;
+  --section-b: 56px;
+  --section-c: 72px;
+  --space: var(--gutter);
+  --container: 1360px;
+
+  --radius: 6px;
+  --header-h: 56px;
+  --bar-h: 64px;
+  --btn-h: 56px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --t-fast: 120ms;
+  --t-arrow: 180ms;
+  --t-mid: 420ms;
+  --t-line: 700ms;
+  --dur: 480ms;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 32px;
+    --gap: 24px;
+    --fs-h1: 60px;
+    --fs-h2: 44px;
+    --fs-row: 32px;
+    --fs-plate: 72px;
+    --fs-h3: 24px;
+    --section-a: 96px;
+    --section-b: 80px;
+    --section-c: 120px;
+    --header-h: 72px;
+    --btn-h: 52px;
+  }
+}
+@media (min-width: 1280px) {
+  :root {
+    --gutter: 40px;
+    --fs-h1: 84px;
+    --fs-h2: 52px;
+    --fs-row: 40px;
+    --fs-plate: 96px;
+    --fs-h3: 26px;
+    --fs-text: 18px;
+    --section-a: 128px;
+    --section-b: 96px;
+    --section-c: 160px;
+  }
+}

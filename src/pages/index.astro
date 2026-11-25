@@ -1,0 +1,629 @@
+---
+// Homepage — design/concept.md «Вказівник медичного дому». Facts only from veon/client.json.
+import { Picture } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import FutureLink from "../components/FutureLink.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MobileBar from "../components/MobileBar.astro";
+import Arrow from "../components/Arrow.astro";
+import team from "../assets/odrex-team.png";
+import pediatrics from "../assets/odrex-pediatrics.jpg";
+import {
+  hotline, ambulance, mobiles, messengers, email, socials,
+  addresses, mapHref, groups, checkups, screenings,
+} from "../data/odrex";
+
+const title = "Медичний дім Odrex — лікарня 24/7 і поліклініки в Одесі";
+const description = "Багатопрофільний медичний дім в Одесі та області: стаціонар і приймальне 24/7, КТ і МРТ, 4 поліклініки всієї сім'ї, швидка 9000. Запис: (048) 730-00-30.";
+
+const clinics = addresses.filter((a) => !a.main && a.id !== "filatova");
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalOrganization",
+  name: "Медичний дім Odrex",
+  legalName: "ТОВ «Медичний дім Odrex»",
+  logo: "/odrex-logo.svg",
+  telephone: "+380487300030",
+  email: "help@odrex-med.com",
+  areaServed: "Одеса та Одеська область",
+  sameAs: socials.map((s) => s.href),
+  department: [
+    {
+      "@type": "Hospital",
+      name: "Медичний дім Odrex — Розкидайлівська",
+      telephone: "+380487300030",
+      address: { "@type": "PostalAddress", streetAddress: "вул. Розкидайлівська, 69/71", addressLocality: "Одеса", addressCountry: "UA" },
+      openingHours: "Mo-Su 00:00-23:59",
+    },
+    {
+      "@type": "Hospital",
+      name: "Багатопрофільна лікарня Odrex на Філатова",
+      telephone: "+380487300030",
+      address: { "@type": "PostalAddress", streetAddress: "вул. Філатова, 38", addressLocality: "Одеса", addressCountry: "UA" },
+      openingHours: "Mo-Sa 08:00-20:00",
+    },
+    ...clinics.map((a) => ({
+      "@type": "MedicalClinic",
+      name: `Поліклініка всієї сім'ї Odrex — ${a.short}`,
+      telephone: "+380487300030",
+      address: { "@type": "PostalAddress", streetAddress: a.street, addressLocality: a.cityName, addressCountry: "UA" },
+    })),
+  ],
+};
+
+const routes = [
+  { href: "#napryamy", title: "До лікаря чи на діагностику", where: "КТ, МРТ, кардіологія, хірургія, онкологія, педіатрія та інші напрями" },
+  { href: "#simeyna", title: "Сімейний лікар і декларація", where: "4 поліклініки всієї сім'ї — в Одесі, Південному та Чорноморську" },
+  { href: "#programy", title: "Check-up і скринінги", where: "7 програм check-up, скринінги, «Скринінг здоров'я 40+»" },
+];
+---
+<Base lang="uk" title={title} description={description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+
+  <!-- ===== Перший екран ===== -->
+  <Section id="hero" rec="R-002,R-001" class="hero">
+    <div class="wrap hero__grid">
+      <h1 class="hero__h1" data-rec="R-101,R-104">Медичний дім Odrex <span class="hero__nl">в Одесі та області</span></h1>
+      <div class="hero__side">
+        <p class="hero__lead">Від сімейного лікаря поруч з домом до стаціонару, хірургії та власної швидкої.<span class="hero__lead-2"> Гаряча лінія відповідає цілодобово.</span></p>
+        <div class="hero__ctas">
+          <a class="btn btn--main hero__btn go" href={hotline.href}>
+            <span class="hero__btn-d">Записатися · <span class="tel">{hotline.label}</span></span>
+            <span class="hero__btn-m">Записатися · 24/7</span>
+            <Arrow dir="ne" size={20} />
+          </a>
+          <a class="text-link go" href="#zapys">Написати в месенджер <Arrow dir="down" size={20} /></a>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="routes" rec="R-003,R-005" class="routes on-board" label="Куди вам?">
+    <div class="wrap">
+      <h2 class="routes__h">Куди вам?</h2>
+      <ul class="routes__list">
+        <li class="routes__item routes__item--urgent" style="--n:0">
+          <a class="routes__row go routes__desk" href={ambulance.cityHref}>
+            <span class="routes__title">Терміново</span>
+            <span class="routes__where"><span class="plate routes__plate">9000</span><span>з мобільного · <span class="tel">{ambulance.city}</span><br />приймальне 24/7, вул. Розкидайлівська, 69/71</span></span>
+            <span class="routes__go"><Arrow dir="ne" size={36} /></span>
+          </a>
+          <a class="routes__row go routes__mob" href={ambulance.shortHref}>
+            <span class="routes__title">Терміново</span>
+            <span class="routes__where">Швидка з мобільного · приймальне 24/7</span>
+            <span class="routes__go"><span class="plate routes__plate">9000</span><Arrow dir="ne" size={28} /></span>
+          </a>
+        </li>
+        {routes.map((r, i) => (
+          <li class="routes__item" style={`--n:${i + 1}`}>
+            <a class="routes__row go" href={r.href}>
+              <span class="routes__title">{r.title}</span>
+              <span class="routes__where">{r.where}</span>
+              <span class="routes__go"><Arrow dir="down" size={36} /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+
+  <!-- ===== Покажчик напрямів ===== -->
+  <Section id="napryamy" rec="R-004" class="sec dir">
+    <div class="wrap dir__grid">
+      <div class="dir__side">
+        <div class="dir__sticky">
+          <h2 class="sec-title">Знайдіть свій напрям</h2>
+          <p class="lead">Одинадцять груп — від стаціонару до стоматології. Вартість і вільний час лікаря підкаже гаряча лінія цілодобово.</p>
+          <div class="dir__filter">
+            <label for="dir-q">Пошук за назвою</label>
+            <input id="dir-q" type="search" placeholder="Наприклад, МРТ або кардіологія" autocomplete="off" aria-describedby="dir-count" />
+            <p id="dir-count" class="small dir__count" aria-live="polite">Показано всі напрями</p>
+          </div>
+          <p class="dir__empty" hidden>Не знайшли напрям? <a class="tel" href={hotline.href}>Зателефонуйте цілодобово: {hotline.label}</a></p>
+        </div>
+      </div>
+      <div class="dir__groups">
+        {groups.map((g) => (
+          <details class="dir__group" open data-group>
+            <summary class="dir__sum">
+              <h3>{g.title}</h3>
+              <span class="dir__chev" aria-hidden="true"><Arrow dir="down" size={20} /></span>
+            </summary>
+            <ul class="dir__items">
+              {g.items.map((it) => <li data-item>{it}</li>)}
+            </ul>
+            <div class="dir__acts">
+              <a class="text-link go" href={hotline.href}>Записатися <Arrow dir="ne" size={18} /></a>
+              <FutureLink note="Розділ у розробці">Сторінка напряму</FutureLink>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <!-- ===== Лінія адрес ===== -->
+  <Section id="adresy" rec="R-006" class="addr on-board">
+    <div class="wrap">
+      <div class="addr__head">
+        <h2 class="sec-title">Шість адрес від Чорноморська до Південного</h2>
+        <div class="addr__filter" role="group" aria-label="Показати адреси">
+          <button type="button" aria-pressed="true" data-city="all">Усі</button>
+          <button type="button" aria-pressed="false" data-city="odesa">Одеса</button>
+          <button type="button" aria-pressed="false" data-city="pivdenne">Південне</button>
+          <button type="button" aria-pressed="false" data-city="chornomorsk">Чорноморськ</button>
+        </div>
+      </div>
+
+      <div class="coast" aria-hidden="true" data-reveal>
+        <span class="coast__track"></span>
+        <ol class="coast__stops">
+          {addresses.map((a, i) => (
+            <li class:list={["coast__stop", { "is-main": a.main }]} data-city={a.city} style={`--i:${i}`}>
+              <span class="coast__dot"></span>
+              <span class="coast__city">{a.city === "odesa" ? "Одеса" : "Одеська обл."}</span>
+              <span class="coast__name">{a.short}{a.main && <span class="coast__tag">24/7</span>}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <ol class="addr__cards" data-reveal>
+        {addresses.map((a) => (
+          <li class:list={["addr__card", { "is-main": a.main }]} data-city={a.city}>
+            <p class="addr__type small">{a.type}</p>
+            <h3 class="addr__street"><span class="addr__city">{a.cityName},</span> {a.street}</h3>
+            <p class:list={["addr__hours small", { "is-247": a.main }]}>{a.hours}</p>
+            <div class="addr__acts">
+              <a class="text-link go" href={mapHref(a)} target="_blank" rel="noopener">Маршрут <Arrow dir="ne" size={18} /></a>
+              <a class="text-link go" href={hotline.href}>Подзвонити <Arrow dir="ne" size={18} /></a>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="small addr__note">У всіх адрес одна гаряча лінія: <a class="tel" href={hotline.href}>{hotline.label}</a>, цілодобово.</p>
+    </div>
+  </Section>
+
+  <!-- ===== Сімейний лікар ===== -->
+  <Section id="simeyna" class="sec fam">
+    <div class="wrap">
+      <h2 class="sec-title fam__h">Сімейний лікар у чотирьох поліклініках</h2>
+      <ul class="fam__places">
+        {clinics.map((a) => <li><span class="fam__city">{a.cityName}</span>{a.street}</li>)}
+      </ul>
+      <div class="fam__cols">
+        <div class="fam__col">
+          <h3>Декларація з сімейним лікарем</h3>
+          <p>Поліклініки всієї сім'ї Odrex працюють із деклараціями НСЗУ. Підкажемо, як обрати лікаря і укласти декларацію, — за телефоном гарячої лінії.</p>
+          <div class="fam__acts">
+            <a class="btn btn--main go" href={hotline.href}>Подзвонити · <span class="tel">{hotline.label}</span> <Arrow dir="ne" size={20} /></a>
+            <FutureLink note="Онлайн-декларація з'явиться в повній версії сайту">Укласти декларацію онлайн</FutureLink>
+          </div>
+        </div>
+        <div class="fam__col fam__col--kids">
+          <figure class="fam__photo">
+            <Picture src={pediatrics} width={1100} formats={["avif", "webp"]} widths={[480, 760, 1100]} sizes="(min-width: 1280px) 620px, (min-width: 768px) 46vw, 100vw" alt="Лікарка Odrex у синій формі грається з хлопчиком у дитячій палаті" loading="lazy" />
+          </figure>
+          <h3>Педіатрія</h3>
+          <ul class="fam__kids">
+            <li>Дитяча поліклініка</li>
+            <li>Дитячий стаціонар</li>
+            <li>Дитяча хірургія та урологія</li>
+            <li>Дитяча ортопедія і травматологія</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- ===== Програми ===== -->
+  <Section id="programy" class="sec prog">
+    <div class="wrap prog__grid">
+      <div class="prog__side">
+        <h2 class="sec-title">Check-up, скринінги і щеплення</h2>
+        <p class="lead">Склад програм і вартість підкаже гаряча лінія — дзвінок цілодобовий.</p>
+      </div>
+      <ul class="prog__rows">
+        <li class="prog__row">
+          <div class="prog__name"><h3>Check-up</h3><p class="small">{checkups.length} програм</p></div>
+          <ul class="tags">{checkups.map((c) => <li class="tag">{c}</li>)}</ul>
+          <a class="text-link go prog__go" href={hotline.href}>Записатися <Arrow dir="ne" size={18} /></a>
+        </li>
+        <li class="prog__row">
+          <div class="prog__name"><h3>Скринінги</h3></div>
+          <ul class="tags">{screenings.map((c) => <li class="tag">{c}</li>)}</ul>
+          <a class="text-link go prog__go" href={hotline.href}>Записатися <Arrow dir="ne" size={18} /></a>
+        </li>
+        <li class="prog__row prog__row--free">
+          <div class="prog__name"><h3>Скринінг здоров'я 40+</h3></div>
+          <p class="prog__free"><span class="prog__badge">Безкоштовно</span> Державна програма</p>
+          <a class="text-link go prog__go" href={hotline.href}>Записатися <Arrow dir="ne" size={18} /></a>
+        </li>
+        <li class="prog__row">
+          <div class="prog__name"><h3>Вакцинація</h3></div>
+          <p class="prog__txt">Запис на щеплення — через гарячу лінію</p>
+          <a class="text-link go prog__go" href={hotline.href}>Записатися <Arrow dir="ne" size={18} /></a>
+        </li>
+        <li class="prog__row">
+          <div class="prog__name"><h3>Річне обслуговування</h3><p class="small">для компаній</p></div>
+          <p class="prog__txt">Програми річного обслуговування та програма медичних гарантій</p>
+          <a class="text-link go prog__go" href={email.href}>Написати <Arrow dir="ne" size={18} /></a>
+        </li>
+      </ul>
+    </div>
+  </Section>
+
+  <!-- ===== Довіра ===== -->
+  <Section id="dovira" rec="R-013" class="sec trust">
+    <div class="wrap trust__grid">
+      <div class="trust__text">
+        <p class="trust__year" aria-hidden="true">2012</p>
+        <h2 class="sec-title">В Одесі з 2012 року</h2>
+        <p class="lead">Повний цикл в одному медичному домі: сімейні лікарі й поліклініки поруч з домом, діагностика КТ і МРТ, цілодобовий стаціонар, кардіо- та нейрохірургія, центр лікування інсультів і власна швидка допомога.</p>
+        <ul class="trust__more">
+          <li><FutureLink note="Розділ у розробці">Фахівці</FutureLink></li>
+          <li><FutureLink note="Розділ у розробці">Ліцензії</FutureLink></li>
+          <li data-rec="R-106"><FutureLink note="Розділ у розробці">3D-тур медичним домом</FutureLink></li>
+        </ul>
+      </div>
+      <figure class="trust__photo">
+        <Picture src={team} formats={["avif", "webp"]} widths={[400, 726]} sizes="(min-width: 1024px) 726px, 100vw" alt="Команда Odrex — лікарі й медсестри — перед входом медичного дому з логотипом Odrex" loading="lazy" />
+        <figcaption class="small">Команда медичного дому Odrex</figcaption>
+      </figure>
+    </div>
+  </Section>
+
+  <!-- ===== Застосунок ===== -->
+  <Section id="zastosunok" rec="R-011" class="app">
+    <div class="wrap app__in">
+      <h2 class="app__h">Застосунок «Odrex кабінет пацієнта»</h2>
+      <p class="app__txt">Запис до лікаря і результати досліджень — у телефоні. Шукайте «Odrex кабінет пацієнта» в App Store і Google Play.</p>
+    </div>
+  </Section>
+
+  <!-- ===== Канали запису ===== -->
+  <Section id="zapys" rec="R-007,R-017" class="plate-sec on-board">
+    <div class="wrap">
+      <h2 class="sec-title zap__h">Гаряча лінія відповідає цілодобово</h2>
+      <a class="zap__num go" href={hotline.href}>
+        <span class="tel">{hotline.label}</span>
+        <span class="zap__arrow"><Arrow dir="ne" size={48} /></span>
+      </a>
+      <p class="zap__note">Запис до лікаря, на діагностику і check-up · вартість і вільний час</p>
+
+      <ul class="zap__ch">
+        <li class="zap__mob">
+          <span class="zap__label">Мобільні</span>
+          <span class="zap__nums">{mobiles.map((m) => <a class="go tel" href={m.href}>{m.label}</a>)}</span>
+        </li>
+        {messengers.map((m) => (
+          <li><a class="zap__row go" href={m.href}><span class="zap__label">{m.name}</span><span class="zap__val">{m.label}</span><Arrow dir="ne" size={24} /></a></li>
+        ))}
+        <li><a class="zap__row go" href={email.href}><span class="zap__label">E-mail</span><span class="zap__val">{email.label}</span><Arrow dir="ne" size={24} /></a></li>
+      </ul>
+
+      <p class="zap__urgent"><span class="plate">9000</span> Швидка допомога з мобільного · <a class="tel" href={ambulance.cityHref}>{ambulance.city}</a></p>
+    </div>
+  </Section>
+
+  <Footer slot="footer" />
+  <MobileBar slot="footer" />
+</Base>
+
+<script>
+  import "../scripts/home";
+</script>
+
+<style is:global>
+  /* ---------- Hero ---------- */
+  .hero { padding-block: var(--s-5) var(--s-5); }
+  .hero__grid { display: grid; gap: var(--s-4); }
+  .hero__h1 { font-size: var(--fs-h1); line-height: 1.02; max-width: 16ch; }
+  .hero__nl { display: inline; }
+  .hero__lead { font-size: var(--fs-text); line-height: 1.5; color: var(--ink-2); max-width: 46ch; }
+  .hero__lead-2 { display: none; }
+  .hero__ctas { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
+  .hero__btn { width: 100%; justify-content: space-between; }
+  .hero__btn-d { display: none; }
+  .hero__ctas .text-link { justify-self: start; }
+
+  @media (min-width: 768px) {
+    .hero { padding-block: var(--s-7) var(--s-6); }
+    .hero__lead-2 { display: inline; }
+    .hero__btn { width: auto; }
+    .hero__btn-d { display: inline; }
+    .hero__btn-m { display: none; }
+    .hero__ctas { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-5); }
+  }
+  @media (min-width: 1024px) {
+    .hero__grid { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); align-items: end; }
+    .hero__h1 { grid-column: 1 / span 8; max-width: none; }
+    .hero__nl { display: block; }
+    .hero__side { grid-column: 9 / span 4; padding-bottom: .4em; }
+    .hero__ctas { flex-direction: column; align-items: flex-start; gap: var(--s-3); }
+  }
+  @media (min-width: 1280px) {
+    .hero { padding-block: var(--s-7) var(--s-6); }
+    .hero__lead { font-size: 20px; }
+  }
+
+  /* ---------- Routes (вказівник) ---------- */
+  .routes { background: var(--board); color: var(--on-board); padding-block: var(--s-4) var(--s-5); }
+  .routes__h { font: 600 var(--fs-small)/1.2 var(--font-body); letter-spacing: 0; color: var(--on-board-2); padding-block: var(--s-2) var(--s-3); }
+  .routes__item { border-top: 1px solid var(--hair-board); }
+  .routes__row {
+    display: grid; grid-template-columns: 1fr auto; grid-template-areas: "t go" "w go";
+    column-gap: var(--s-4); align-items: center;
+    min-height: 76px; padding-block: var(--s-3);
+    text-decoration: none; color: inherit;
+    transition: background-color var(--t-fast) var(--ease-out);
+  }
+  .routes__title { grid-area: t; font: 700 var(--fs-row)/1.05 var(--font-display); letter-spacing: -0.02em; }
+  .routes__where { grid-area: w; font-size: var(--fs-small); line-height: 1.4; color: var(--on-board-2); margin-top: var(--s-1); }
+  .routes__go { grid-area: go; display: inline-flex; align-items: center; gap: var(--s-3); color: var(--action); }
+  .routes__plate { font-size: 20px; }
+  .routes__item--urgent .routes__title { color: var(--on-board); }
+  .routes__desk { display: none; }
+
+  @media (min-width: 1024px) {
+    .routes { padding-block: var(--s-3) var(--s-4); }
+    .routes__mob { display: none; }
+    .routes__desk { display: grid; }
+    .routes__row {
+      grid-template-columns: repeat(12, 1fr); grid-template-areas: none; column-gap: var(--gap);
+      min-height: 104px; padding-block: var(--s-4);
+    }
+    .routes__row:hover { background: color-mix(in srgb, var(--on-board) 6%, transparent); }
+    .routes__title { grid-area: auto; grid-column: 1 / span 6; padding-left: var(--s-2); }
+    .routes__where { grid-area: auto; grid-column: 7 / span 5; margin: 0; font-size: var(--fs-text); display: flex; align-items: center; gap: var(--s-4); }
+    .routes__go { grid-area: auto; grid-column: 12; justify-self: end; padding-right: var(--s-2); }
+    .routes__desk .routes__plate { font-size: 34px; flex: none; }
+  }
+
+  /* ---------- Directory ---------- */
+  .dir { padding-block: var(--section-b) var(--section-a); }
+  .dir__grid { display: grid; gap: var(--s-6); }
+  .dir__side .lead { margin-top: var(--s-4); }
+  .dir__filter { display: none; margin-top: var(--s-5); }
+  .js .dir__filter { display: grid; gap: var(--s-2); }
+  .dir__filter label { font-weight: 600; }
+  .dir__filter input {
+    height: 52px; padding: 0 var(--s-4); width: 100%;
+    font: 400 var(--fs-text) var(--font-body); color: var(--ink);
+    background: var(--white); border: 2px solid var(--ink-2); border-radius: var(--radius);
+  }
+  .dir__filter input::placeholder { color: var(--ink-2); }
+  .dir__filter input:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-color: var(--ink); }
+  .dir__count { color: var(--ink-2); }
+  .dir__empty { margin-top: var(--s-4); font-weight: 600; }
+  .dir__empty a { color: var(--link); }
+
+  .dir__group { border-top: 1px solid var(--hair); break-inside: avoid; }
+  .dir__sum { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 64px; padding-block: var(--s-3); cursor: pointer; list-style: none; }
+  .dir__sum::-webkit-details-marker { display: none; }
+  .dir__chev { color: var(--line); transition: transform var(--t-arrow) var(--ease-out); }
+  .dir__group[open] .dir__chev { transform: rotate(180deg); }
+  .dir__items { display: flex; flex-wrap: wrap; gap: var(--s-1) 0; color: var(--ink); line-height: 1.5; }
+  .dir__items li { transition: opacity 150ms var(--ease-out); }
+  .dir__items li:not(:last-child)::after { content: "·"; padding-inline: .5em; color: var(--line); }
+  .dir__items li.is-off { opacity: .32; }
+  .dir__items li.is-hit { font-weight: 600; }
+  .dir__group.is-gone { display: none; }
+  .dir__acts { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); align-items: center; padding-block: var(--s-2) var(--s-5); }
+  .dir__acts .future-link { font-size: var(--fs-small); }
+
+  @media (min-width: 1024px) {
+    .dir__grid { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); }
+    .dir__side { grid-column: 1 / span 4; }
+    .dir__sticky { position: sticky; top: calc(var(--header-h) + var(--s-6)); }
+    .dir__groups { grid-column: 6 / span 7; columns: 2; column-gap: var(--s-6); }
+    .dir__sum { pointer-events: none; min-height: 0; padding-block: var(--s-4) var(--s-3); }
+    .dir__chev { display: none; }
+  }
+
+  /* ---------- Addresses (coast line) ---------- */
+  .addr { background: var(--board); color: var(--on-board); padding-block: var(--section-b); }
+  .addr__head { display: grid; gap: var(--s-5); }
+  .addr__head h2 { max-width: 18ch; text-wrap: balance; }
+  .addr__filter { display: none; flex-wrap: wrap; gap: var(--s-2); }
+  .js .addr__filter { display: flex; }
+  .addr__filter button {
+    min-height: 44px; padding: 0 var(--s-4); border-radius: 999px;
+    font: 600 var(--fs-small) var(--font-body); color: var(--on-board);
+    background: transparent; border: 1px solid var(--on-board-2); cursor: pointer;
+    transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+  }
+  .addr__filter button:hover { border-color: var(--on-board); }
+  .addr__filter button[aria-pressed="true"] { background: var(--on-board); color: var(--board); border-color: var(--on-board); }
+
+  .coast { display: none; }
+  .addr__cards { position: relative; display: grid; gap: var(--s-4); margin-top: var(--s-6); padding-left: var(--s-6); }
+  .addr__cards::before { content: ""; position: absolute; left: 9px; top: 12px; bottom: 12px; width: 3px; background: var(--line); border-radius: 2px; }
+  .addr__card { position: relative; padding: var(--s-4) var(--s-4) var(--s-2); border: 1px solid var(--hair-board); border-radius: var(--radius); transition: opacity var(--t-arrow) var(--ease-out); }
+  .addr__card::before { content: ""; position: absolute; left: calc(-1 * var(--s-6) + 3px); top: 22px; width: 15px; height: 15px; border-radius: 50%; background: var(--board); border: 3px solid var(--line); }
+  .addr__card.is-main::before { background: var(--action); border-color: var(--action); }
+  .addr__card.is-main { border-color: var(--on-board-2); }
+  .addr__type { color: var(--on-board-2); }
+  .addr__street { font-size: var(--fs-h3); margin-top: var(--s-1); }
+  .addr__city { display: block; font: 400 var(--fs-small)/1.4 var(--font-body); letter-spacing: 0; color: var(--on-board-2); }
+  .addr__hours { margin-top: var(--s-2); color: var(--on-board); }
+  .addr__hours.is-247 { font-weight: 700; color: var(--action); }
+  .addr__acts { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); margin-top: var(--s-2); }
+  .addr__card.is-dim, .coast__stop.is-dim { opacity: .35; }
+  .addr__note { margin-top: var(--s-5); color: var(--on-board-2); }
+  .addr__note a { color: var(--on-board); }
+
+  @media (min-width: 1024px) {
+    .addr__head { grid-template-columns: 1fr auto; align-items: end; }
+    .coast { display: block; position: relative; margin-top: var(--s-7); padding-top: 32px; }
+    .coast__track { position: absolute; left: 0; right: 0; top: 38px; height: 4px; border-radius: 2px; background: var(--line); transform-origin: left; }
+    .coast__stops { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--gap); }
+    .coast__stop { display: grid; align-content: start; gap: var(--s-1); transition: opacity var(--t-arrow) var(--ease-out); }
+    .coast__dot { width: 16px; height: 16px; margin-bottom: var(--s-4); border-radius: 50%; background: var(--board); border: 3px solid var(--on-board); }
+    .coast__stop.is-main .coast__dot { width: 24px; height: 24px; margin-top: -4px; margin-bottom: var(--s-3); background: var(--action); border-color: var(--action); }
+    .coast__city { font-size: var(--fs-small); color: var(--on-board-2); }
+    .coast__name { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); font: 700 var(--fs-h3)/1.1 var(--font-display); letter-spacing: -0.01em; }
+    .coast__stop.is-main .coast__name { color: var(--action); }
+    .coast__tag { font: 700 var(--fs-small)/1 var(--font-body); color: var(--board); background: var(--action); padding: 4px 8px; border-radius: 4px; }
+
+    .addr__cards { grid-template-columns: repeat(3, 1fr); gap: var(--gap); padding-left: 0; margin-top: var(--s-7); }
+    .addr__cards::before, .addr__card::before { display: none; }
+    .addr__card { padding: var(--s-5) var(--s-5) var(--s-3); }
+  }
+
+  /* ---------- Family ---------- */
+  .fam { background: var(--surface-2); padding-block: var(--section-a); }
+  .fam__h { max-width: 16ch; }
+  .fam__places { display: grid; gap: var(--s-3); margin-top: var(--s-6); }
+  .fam__places li { display: grid; font: 700 var(--fs-row)/1.1 var(--font-display); letter-spacing: -0.02em; padding-top: var(--s-3); border-top: 1px solid var(--hair); }
+  .fam__city { font: 400 var(--fs-small)/1.4 var(--font-body); letter-spacing: 0; color: var(--ink-2); }
+  .fam__cols { display: grid; gap: var(--s-7); margin-top: var(--s-7); }
+  .fam__col > p { margin-top: var(--s-3); max-width: 52ch; }
+  .fam__acts { display: grid; gap: var(--s-3); justify-items: start; margin-top: var(--s-5); }
+  .fam__acts .btn { width: 100%; justify-content: space-between; }
+  .fam__photo { margin: 0 0 var(--s-5); border-radius: var(--radius); overflow: hidden; aspect-ratio: 3 / 2; background: var(--paper); }
+  .fam__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 40%; }
+  .fam__kids { margin-top: var(--s-3); }
+  .fam__kids li { padding-block: var(--s-2); border-bottom: 1px solid var(--hair); }
+
+  @media (min-width: 768px) {
+    .fam__places { grid-template-columns: repeat(2, 1fr); column-gap: var(--gap); }
+    .fam__acts .btn { width: auto; }
+  }
+  @media (min-width: 1024px) {
+    .fam__places { grid-template-columns: repeat(4, 1fr); }
+    .fam__places li { font-size: var(--fs-h3); }
+    .fam__cols { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); align-items: start; }
+    .fam__col { grid-column: 1 / span 5; padding-top: var(--s-6); }
+    .fam__col--kids { grid-column: 7 / span 6; padding-top: 0; }
+  }
+
+  /* ---------- Programs ---------- */
+  .prog { padding-block: var(--section-c) var(--section-b); }
+  .prog__grid { display: grid; gap: var(--s-6); }
+  .prog__side .lead { margin-top: var(--s-4); }
+  .prog__row { display: grid; gap: var(--s-3); padding-block: var(--s-5); border-top: 1px solid var(--hair); }
+  .prog__row:last-child { border-bottom: 1px solid var(--hair); }
+  .prog__name .small { color: var(--ink-2); margin-top: var(--s-1); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .tag {
+    position: relative; display: inline-flex; align-items: center; min-height: 34px;
+    padding: 0 var(--s-3) 0 var(--s-5); font-size: var(--fs-small);
+    border: 1px solid var(--hair); border-radius: 4px 999px 999px 4px; background: var(--white);
+  }
+  .tag::before { content: ""; position: absolute; left: 10px; width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--line); }
+  .prog__free { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+  .prog__badge { display: inline-flex; align-items: center; min-height: 32px; padding: 0 var(--s-3); border-radius: 4px; background: var(--board); color: var(--on-board); font-weight: 600; font-size: var(--fs-small); }
+  .prog__txt { color: var(--ink-2); }
+  .prog__go { justify-self: start; }
+
+  @media (min-width: 1024px) {
+    .prog__grid { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); }
+    .prog__side { grid-column: 1 / span 4; }
+    .prog__rows { grid-column: 5 / span 8; }
+    .prog__row { grid-template-columns: 3fr 6fr 2fr; column-gap: var(--gap); align-items: center; }
+    .prog__go { justify-self: end; }
+  }
+
+  /* ---------- Trust ---------- */
+  .trust { padding-block: var(--section-b) var(--section-a); }
+  .trust__grid { display: grid; gap: var(--s-6); }
+  .trust__year { font: 700 clamp(112px, 34vw, 280px)/.82 var(--font-display); letter-spacing: -0.05em; color: var(--line); font-variant-numeric: tabular-nums; margin-bottom: var(--s-5); }
+  .trust__text .lead { margin-top: var(--s-4); color: var(--ink); }
+  .trust__more { display: flex; flex-wrap: wrap; gap: 0 var(--s-5); margin-top: var(--s-5); }
+  .trust__photo { margin: 0; }
+  .trust__photo img { width: 100%; height: auto; border-radius: var(--radius); }
+  .trust__photo figcaption { margin-top: var(--s-2); color: var(--ink-2); }
+
+  @media (min-width: 1024px) {
+    .trust__grid { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); align-items: end; }
+    .trust__text { grid-column: 1 / span 6; }
+    .trust__photo { grid-column: 7 / span 6; }
+  }
+
+  /* ---------- App band ---------- */
+  .app { padding-block: var(--s-6); border-block: 1px solid var(--hair); background: var(--surface-2); }
+  .app__in { display: grid; gap: var(--s-3); }
+  .app__h { font-size: var(--fs-row); line-height: 1.1; }
+  .app__txt { color: var(--ink-2); max-width: 56ch; }
+  @media (min-width: 1024px) {
+    .app__in { grid-template-columns: repeat(12, 1fr); column-gap: var(--gap); align-items: center; }
+    .app__h { grid-column: 1 / span 7; }
+    .app__txt { grid-column: 8 / span 5; }
+  }
+
+  /* ---------- Hotline plate ---------- */
+  .plate-sec { background: var(--board); color: var(--on-board); padding-block: var(--section-b); }
+  .zap__h { font-size: var(--fs-h3); line-height: 1.2; color: var(--on-board-2); font-family: var(--font-body); font-weight: 600; letter-spacing: 0; }
+  .zap__num {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--s-4);
+    margin-top: var(--s-4); text-decoration: none; color: var(--on-board);
+    font: 700 var(--fs-plate)/1 var(--font-display); letter-spacing: -0.03em;
+  }
+  .zap__arrow { color: var(--action); }
+  .zap__num:hover .tel { color: var(--action); }
+  .zap__note { margin-top: var(--s-3); color: var(--on-board-2); }
+  .zap__ch { margin-top: var(--s-6); border-top: 1px solid var(--hair-board); }
+  .zap__ch > li { border-bottom: 1px solid var(--hair-board); }
+  .zap__row {
+    display: grid; grid-template-columns: 1fr auto; grid-template-areas: "l a" "v a"; align-items: center; column-gap: var(--s-4);
+    min-height: 64px; padding-block: var(--s-3); text-decoration: none; color: var(--on-board);
+  }
+  .zap__row .zap__label { grid-area: l; }
+  .zap__row .zap__val { grid-area: v; }
+  .zap__row .arrow { grid-area: a; color: var(--action); }
+  .zap__label { font: 700 var(--fs-h3)/1.15 var(--font-display); }
+  .zap__val { color: var(--on-board-2); font-size: var(--fs-small); }
+  .zap__mob { display: grid; gap: var(--s-2); padding-block: var(--s-4); }
+  .zap__nums { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .zap__nums a {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0 var(--s-4);
+    border: 1px solid var(--on-board-2); border-radius: var(--radius); color: var(--on-board); text-decoration: none; font-weight: 600;
+  }
+  .zap__nums a:hover { border-color: var(--action); color: var(--action); }
+  .zap__urgent { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); margin-top: var(--s-6); color: var(--on-board-2); }
+  .zap__urgent .plate { font-size: 20px; }
+  .zap__urgent a { color: var(--on-board); }
+
+  @media (min-width: 1024px) {
+    .plate-sec { padding-block: var(--section-a); }
+    .zap__num { justify-content: flex-start; gap: var(--s-6); }
+    .zap__ch { display: grid; grid-template-columns: repeat(2, 1fr); column-gap: var(--s-7); }
+    .zap__mob { grid-column: 1 / -1; grid-template-columns: 3fr 9fr; align-items: center; }
+    .zap__row { grid-template-columns: 3fr 6fr auto; grid-template-areas: "l v a"; min-height: 80px; }
+    .zap__val { font-size: var(--fs-text); }
+    .zap__row:hover .zap__label { color: var(--action); }
+  }
+
+  /* ---------- Motion (concept §8: 1 rows light up, 3 coast line, 2/4/5 in site.css and home.ts) ---------- */
+  @keyframes rowIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+  @keyframes rowInM { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+  @keyframes lineX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes lineY { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes stopIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .js .routes__item { animation: rowInM var(--dur) var(--ease-out) backwards; animation-delay: calc(var(--n) * 60ms); }
+  .js .routes__item--urgent { animation: none; }
+  @media (min-width: 1024px) {
+    .js .routes__item, .js .routes__item--urgent { animation: rowIn var(--dur) var(--ease-out) backwards; animation-delay: calc(var(--n) * 60ms); }
+  }
+
+  .js .coast[data-reveal]:not(.is-visible), .js .addr__cards[data-reveal]:not(.is-visible) { opacity: 1; transform: none; }
+  .js .coast:not(.is-visible) .coast__track { transform: scaleX(0); }
+  .js .coast:not(.is-visible) .coast__stop { opacity: 0; }
+  .js .coast.is-visible .coast__track { animation: lineX var(--t-line) var(--ease-out) backwards; }
+  .js .coast.is-visible .coast__stop { animation: stopIn 320ms var(--ease-out) backwards; animation-delay: calc(450ms + var(--i) * 50ms); }
+  .addr__cards::before { transform-origin: top; }
+  .js .addr__cards:not(.is-visible)::before { transform: scaleY(0); }
+  .js .addr__cards.is-visible::before { animation: lineY 500ms var(--ease-out) backwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .routes__item, .js .coast.is-visible .coast__track, .js .coast.is-visible .coast__stop, .js .addr__cards.is-visible::before { animation: none; }
+    .js .coast:not(.is-visible) .coast__track, .js .addr__cards:not(.is-visible)::before { transform: none; }
+    .js .coast:not(.is-visible) .coast__stop { opacity: 1; }
+  }
+</style>

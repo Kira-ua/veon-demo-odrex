@@ -1,0 +1,92 @@
+---
+import Logo from "./Logo.astro";
+import FutureLink from "./FutureLink.astro";
+import { addresses, hotline, ambulance, mobiles, messengers, email, socials } from "../data/odrex";
+---
+<footer id="footer" class="ftr" data-rec="R-017,S-R008">
+  <div class="wrap">
+    <div class="ftr__top">
+      <Logo height={40} />
+      <p class="small ftr__claim">Медичний дім в Одесі та області: шість адрес від Чорноморська до Південного.</p>
+    </div>
+
+    <ol class="ftr__line" aria-label="Адреси медичного дому">
+      {addresses.map((a) => (
+        <li class:list={["ftr__stop", { "is-main": a.main }]}>
+          <span class="ftr__dot" aria-hidden="true"></span>
+          <span class="ftr__city">{a.cityName}</span>
+          <span class="ftr__street">{a.street}</span>
+        </li>
+      ))}
+    </ol>
+
+    <div class="ftr__grid">
+      <div>
+        <p class="ftr__h">Гаряча лінія, цілодобово</p>
+        <a class="ftr__big tel" href={hotline.href}>{hotline.label}</a>
+        <p class="small">{mobiles.map((m, i) => <>{i > 0 && " · "}<a class="tel" href={m.href}>{m.label}</a></>)}</p>
+      </div>
+      <div>
+        <p class="ftr__h">Швидка допомога</p>
+        <a class="ftr__big ftr__urgent" href={ambulance.shortHref}><span class="plate">9000</span> <span class="ftr__sm">з мобільного</span></a>
+        <p class="small"><a class="tel" href={ambulance.cityHref}>{ambulance.city}</a></p>
+      </div>
+      <div>
+        <p class="ftr__h">Написати</p>
+        <ul class="ftr__list">
+          {messengers.map((m) => <li><a href={m.href}>{m.name}</a></li>)}
+          <li><a href={email.href}>{email.label}</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ftr__h">Ми в соцмережах</p>
+        <ul class="ftr__list">
+          {socials.map((s) => <li><a href={s.href} rel="noopener" target="_blank">{s.name}</a></li>)}
+        </ul>
+      </div>
+    </div>
+
+    <div class="ftr__legal small">
+      <p>© 2012–2026, ТОВ «Медичний дім Odrex»</p>
+      <FutureLink note="Розділ у розробці">Політика конфіденційності</FutureLink>
+    </div>
+  </div>
+</footer>
+<style>
+  .ftr { padding-block: var(--section-a) var(--s-6); border-top: 1px solid var(--hair); }
+  .ftr__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-4); }
+  .ftr__claim { color: var(--ink-2); max-width: 40ch; }
+
+  .ftr__line {
+    position: relative; display: grid; gap: var(--s-3);
+    margin-block: var(--s-6); padding-left: var(--s-5);
+  }
+  .ftr__line::before { content: ""; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .ftr__stop { position: relative; display: grid; font-size: var(--fs-small); line-height: 1.35; }
+  .ftr__dot { position: absolute; left: calc(-1 * var(--s-5)); top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); }
+  .ftr__stop.is-main .ftr__dot { background: var(--line); }
+  .ftr__city { color: var(--ink-2); }
+  .ftr__street { font-weight: 600; }
+
+  .ftr__grid { display: grid; gap: var(--s-6) var(--gap); grid-template-columns: 1fr; padding-block: var(--s-6); border-top: 1px solid var(--hair); }
+  .ftr__h { font-size: var(--fs-small); color: var(--ink-2); margin-bottom: var(--s-2); }
+  .ftr__big { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; font: 700 var(--fs-h3)/1.1 var(--font-display); text-decoration: none; }
+  .ftr__big:hover { color: var(--link); }
+  .ftr__urgent .plate { font-size: 20px; }
+  .ftr__sm { font: 400 var(--fs-small)/1 var(--font-body); color: var(--ink-2); }
+  .ftr a.tel, .ftr__list a { color: var(--link); }
+  .ftr__grid .small a { display: inline-block; padding-block: var(--s-2); }
+  .ftr__list li a { display: inline-flex; align-items: center; min-height: 40px; }
+
+  .ftr__legal { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); align-items: center; justify-content: space-between; padding-top: var(--s-5); border-top: 1px solid var(--hair); color: var(--ink-2); }
+
+  @media (min-width: 768px) {
+    .ftr__grid { grid-template-columns: repeat(2, 1fr); }
+    .ftr__line { grid-template-columns: repeat(6, 1fr); padding-left: 0; padding-top: var(--s-6); gap: var(--gap); }
+    .ftr__line::before { left: 6px; right: 0; top: 5px; bottom: auto; width: auto; height: 2px; }
+    .ftr__dot { left: 0; top: calc(-1 * var(--s-6)); }
+  }
+  @media (min-width: 1280px) {
+    .ftr__grid { grid-template-columns: 1.3fr 1fr 1fr 1fr; }
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+// "Honest arrow": ne = leaves the page (call, messenger, map), down = section below, right = another page of the site.
+interface Props { dir?: "ne" | "down" | "right"; size?: number; class?: string; }
+const { dir = "down", size = 24, class: cls } = Astro.props;
+const paths = {
+  ne: "M7 17 17 7M8 7h9v9",
+  down: "M12 4v15M5 12l7 7 7-7",
+  right: "M4 12h15M12 5l7 7-7 7",
+};
+---
+<svg class:list={["arrow", `arrow--${dir}`, cls]} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d={paths[dir]} /></svg>

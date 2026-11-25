@@ -1,0 +1,98 @@
+/* Odrex — shared styles of the homepage (tokens only). */
+html { overflow-x: clip; }
+body {
+  overflow-x: clip;
+  font-size: var(--fs-text);
+  font-feature-settings: "kern";
+  padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 1024px) { body { padding-bottom: 0; } }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+h2 { font-size: var(--fs-h2); line-height: 1.05; }
+h3 { font-size: var(--fs-h3); line-height: 1.15; }
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+a { text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+.wrap { width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto; }
+.tel { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lead { font-size: var(--fs-text); line-height: 1.55; color: var(--ink-2); max-width: 62ch; }
+.small { font-size: var(--fs-small); line-height: 1.45; }
+
+/* Focus: ring 3 px link-blue on paper, green on the board */
+:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+.on-board :focus-visible { outline-color: var(--action); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-3);
+  min-height: var(--btn-h); padding: 0 var(--s-5);
+  border-radius: var(--radius); border: 0;
+  font: 600 var(--fs-text)/1.1 var(--font-body);
+  text-decoration: none; cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+}
+.btn--main { background: var(--action); color: var(--ink); }
+.btn--main:hover { background: var(--action-hover); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled, button:disabled { opacity: .55; cursor: not-allowed; }
+::selection { background: var(--action); color: var(--ink); }
+html { scrollbar-color: var(--ink-2) var(--surface-2); }
+
+.text-link {
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: 44px;
+  color: var(--link); font-weight: 600; text-decoration: none;
+}
+.text-link:hover { text-decoration: underline; }
+.on-board .text-link { color: var(--on-board); }
+
+/* Urgent plate «9000» — the only red on the page */
+.plate {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: max(4px, .3em) max(8px, .5em); min-height: 1.45em; border-radius: 4px;
+  background: var(--urgent); color: var(--white);
+  font-family: var(--font-display); font-weight: 700; font-variant-numeric: tabular-nums;
+  letter-spacing: 0; line-height: 1;
+}
+
+/* Honest arrows: move 4 px in their own direction */
+.arrow { flex: none; transition: transform var(--t-arrow) var(--ease-out); }
+@media (hover: hover) {
+  .go:hover .arrow--ne, .go:focus-visible .arrow--ne { transform: translate(4px, -4px); }
+  .go:hover .arrow--down, .go:focus-visible .arrow--down { transform: translateY(4px); }
+  .go:hover .arrow--right, .go:focus-visible .arrow--right { transform: translateX(4px); }
+}
+.go:active .arrow--ne { transform: translate(4px, -4px); }
+.go:active .arrow--down { transform: translateY(4px); }
+.go:active .arrow--right { transform: translateX(4px); }
+
+/* Section heading + «Ви тут» mark after an anchor jump */
+.sec-title { position: relative; padding-bottom: var(--s-4); }
+.sec-title::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 96px; height: 4px; border-radius: 2px;
+  background: var(--action); transform: scaleX(0); transform-origin: left; opacity: 0;
+  transition: transform var(--t-mid) var(--ease-out), opacity var(--t-fast) linear;
+}
+.is-here .sec-title::after { transform: scaleX(1); opacity: 1; }
+
+/* FutureLink — part of the design: muted text with a dotted underline and a small note */
+.future-link {
+  color: var(--ink-2); font-weight: 400; min-height: 44px; gap: var(--s-2);
+  text-decoration: underline dotted 1px; text-underline-offset: 4px;
+  cursor: help; border-radius: 2px;
+}
+.future-link:hover, .future-link:focus-visible { color: var(--ink); }
+.on-board .future-link { color: var(--on-board-2); }
+.on-board .future-link:hover, .on-board .future-link:focus-visible { color: var(--on-board); }
+.future-link__note[aria-hidden="true"] { background: var(--ink); color: var(--paper); font-family: var(--font-body); font-weight: 400; text-decoration: none; }
+.on-board .future-link__note[aria-hidden="true"] { background: var(--paper); color: var(--ink); }
+
+/* Section rhythm */
+.sec { padding-block: var(--section-b); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-title::after { transition: none; }
+  .arrow { transition: none; transform: none !important; }
+}
