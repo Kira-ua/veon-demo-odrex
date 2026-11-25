@@ -3,9 +3,10 @@
 interface Props { class?: string; height?: number; }
 const { class: cls, height = 40 } = Astro.props;
 const width = Math.round(height * 595.3 / 178);
+const base = (import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + "/");
 ---
 <a class:list={["logo", cls]} href="#top" aria-label="Медичний дім Odrex — на початок сторінки">
-  <img src="/odrex-logo.svg" alt="Odrex медичний дім" width={width} height={height} />
+  <img src={`${base}odrex-logo.svg`} alt="Odrex медичний дім" width={width} height={height} />
 </a>
 <style>
   .logo { display: inline-flex; align-items: center; border-radius: var(--radius); }

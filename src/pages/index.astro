@@ -24,7 +24,7 @@ const jsonLd = {
   "@type": "MedicalOrganization",
   name: "Медичний дім Odrex",
   legalName: "ТОВ «Медичний дім Odrex»",
-  logo: "/odrex-logo.svg",
+  logo: `${(import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + "/")}odrex-logo.svg`,
   telephone: "+380487300030",
   email: "help@odrex-med.com",
   areaServed: "Одеса та Одеська область",
